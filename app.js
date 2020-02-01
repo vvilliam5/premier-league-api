@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var fixtureRouter = require('./routes/fixtures');
 var teamRouter = require('./routes/teams');
+var userRouter = require('./routes/users');
 const logRocket = require('logrocket');
 logRocket.init('pvy6hr/mock-pl-api');
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/fixtures', fixtureRouter);
 app.use('/teams', teamRouter);
+app.use('/users', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
