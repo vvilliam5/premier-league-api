@@ -4,7 +4,8 @@ const pool = new Pool({
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    ssl: true
 })
 //TEAMS
 //get all teams
@@ -19,7 +20,7 @@ const getTeams = (request, response) => {
 
 //get team by id
 const getTeamsById = (request, response) => {
-    const id = parseInt(request.params.id)
+    let id = parseInt(request.params.id)
     pool.query('SELECT * FROM teams WHERE id = $1', [id], (error, results) => {
         if (error) {
             throw error
@@ -29,9 +30,9 @@ const getTeamsById = (request, response) => {
 }
 //create new team
 const createTeam = (request, response) => {
-    const { team_name } = request.body;
+    let { id, team_name } = request.body;
     team_name = team_name.toLowerCase();
-    pool.query('INSERT INTO teams (team_name) VALUES ($1)', [team_name], (error, results) => {
+    pool.query('INSERT INTO teams (id, team_name) VALUES ($1, $2)', [id, team_name], (error, results) => {
         if (error) {
             throw error
         }
@@ -40,8 +41,8 @@ const createTeam = (request, response) => {
 }
 //update a team
 const updateTeam = (request, response) => {
-    const id = parseInt(request.params.id)
-    const { team_name } = request.body;
+    let id = parseInt(request.params.id)
+    let { team_name } = request.body;
     team_name = team_name.toLowerCase();
     pool.query(
         'UPDATE teams SET team_name = $1  WHERE id = $2',

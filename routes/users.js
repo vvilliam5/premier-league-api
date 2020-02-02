@@ -11,7 +11,5 @@ router.post('/signup', db.createUser);
 router.get('/', adminAuth, db.getUsers);
 //log in user
 router.post('/login', db.userLogin);
-//delete a user
-router.delete('/:id', adminAuth, db.deleteUser)
 
 module.exports = router;
