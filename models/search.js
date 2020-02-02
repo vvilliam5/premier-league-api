@@ -25,7 +25,7 @@ const searchFixtures = (request, response) => {
 const searchTeams = (request, response) => {
     let { search } = request.body;
     search = search.toLowerCase();
-    pool.query('SELECT * FROM fixtures WHERE team_name like $i', [search], (error, results) => {
+    pool.query('SELECT * FROM teams WHERE team_name like $1', [search], (error, results) => {
         if (error) {
             throw error
         }
