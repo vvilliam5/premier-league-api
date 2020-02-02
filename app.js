@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var fixtureRouter = require('./routes/fixtures');
 var teamRouter = require('./routes/teams');
 var userRouter = require('./routes/users');
+var searchRouter = require('./routes/search');
 const logRocket = require('logrocket');
 logRocket.init('pvy6hr/mock-pl-api');
 
@@ -34,6 +35,7 @@ app.use('/', indexRouter);
 app.use('/fixtures', fixtureRouter);
 app.use('/teams', teamRouter);
 app.use('/users', userRouter);
+app.use('/search', searchRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

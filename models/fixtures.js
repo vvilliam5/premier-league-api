@@ -1,10 +1,10 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-    user: 'me',
-    host: 'localhost',
-    database: 'pl_api',
-    password: '123',
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
 })
 //FIXTURES
 //get all fixtures
@@ -20,7 +20,6 @@ const getFixtures = (request, response) => {
 //get fixture by id
 const getFixturesById = (request, response) => {
     const id = parseInt(request.params.id)
-
     pool.query('SELECT * FROM fixtures WHERE id = $1', [id], (error, results) => {
         if (error) {
             throw error
@@ -30,8 +29,10 @@ const getFixturesById = (request, response) => {
 }
 //create new fixture
 const createFixture = (request, response) => {
-    const { home_name, home_score, away_name, away_score, status } = request.body;
-
+    let { home_name, home_score, away_name, away_score, status } = request.body;
+    home_name = home_name.toLowerCase();
+    away_name = away_name.toLowerCase();
+    status = status.toLowerCase();
     pool.query('INSERT INTO fixtures (home_name, home_score, away_name, away_score, status) VALUES ($1, $2, $3, $4, $5)', [home_name, home_score, away_name, away_score, status], (error, results) => {
         if (error) {
             throw error
@@ -42,8 +43,10 @@ const createFixture = (request, response) => {
 //update a fixture
 const updateFixture = (request, response) => {
     const id = parseInt(request.params.id)
-    const { home_name, home_score, away_name, away_score, status } = request.body
-
+    const { home_name, home_score, away_name, away_score, status } = request.body;
+    home_name = home_name.toLowerCase();
+    away_name = away_name.toLowerCase();
+    status = status.toLowerCase();
     pool.query(
         'UPDATE fixtures SET home_name = $1, home_score = $2, away_name = $3, away_score = $4, status = $5 WHERE id = $6',
         [home_name, home_score, away_name, away_score, status, id],
@@ -58,7 +61,6 @@ const updateFixture = (request, response) => {
 //delete a fixture
 const deleteFixture = (request, response) => {
     const id = parseInt(request.params.id)
-
     pool.query('DELETE FROM fixtures WHERE id = $1', [id], (error, results) => {
         if (error) {
             throw error

@@ -3,16 +3,17 @@ const Pool = require('pg').Pool
 const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
-    user: 'me',
-    host: 'localhost',
-    database: 'pl_api',
-    password: '123',
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
 })
 //USERS
 //create a user
 const createUser = (request, response) => {
-    const { email, password, type } = request.body;
+    let { email, password, type } = request.body;
+    email = email.toLowerCase();
     //bcrypt sucks
     // bcrypt.hash(email, 10, (err, hash) => {
     //     if (err) {
@@ -54,7 +55,8 @@ const getUsers = (request, response) => {
 }
 //login
 const userLogin = (request, response) => {
-    const { email, password } = request.body;
+    let { email, password } = request.body;
+    email = email.toLowerCase();
     // const id = parseInt(request.params.id)
     pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
         if (error) {
@@ -70,37 +72,30 @@ const userLogin = (request, response) => {
         //     return response.status(401).json({ "message": "Something went wrong" })
         // })
         if (password === results.rows[0].password) {
-            const token = jwt.sign({
-                id: results.rows[0].id,
-                email: results.rows[0].email
-            }, "secret_admin", {
-                expiresIn: "1h"
-            })
-            return response.status(200).json({ message: "Login Successful", token: token })
+            if (results.rows[0].type == "admin") {
+                const token = jwt.sign({
+                    id: results.rows[0].id,
+                    email: results.rows[0].email
+                }, "secret_admin", {
+                    expiresIn: "1h"
+                })
+                return response.status(200).json({ message: "Login Successful", token: token })
+            }
+            else if (results.rows[0].type == 'user') {
+                const token = jwt.sign({
+                    id: results.rows[0].id,
+                    email: results.rows[0].email
+                }, "secret_user", {
+                    expiresIn: "1h"
+                })
+                return response.status(200).json({ message: "Login Successful", token: token })
+            }
         }
         else {
             return response.status(401).json({ "message": "Password doesnt match" })
         }
     })
 }
-// //update a fixture
-// const updateFixture = (request, response) => {
-//     const id = parseInt(request.params.id)
-//     const { home_name, home_score, away_name, away_score, status } = request.body
-
-//     pool.query(
-//         'UPDATE fixtures SET home_name = $1, home_score = $2, away_name = $3, away_score = $4, status = $5 WHERE id = $6',
-//         [home_name, home_score, away_name, away_score, status, id],
-//         (error, results) => {
-//             if (error) {
-//                 throw error
-//             }
-//             response.status(200).send(`Fixture modified with ID: ${id}`)
-//         }
-//     )
-// }
-
-
 
 module.exports = {
     createUser,
