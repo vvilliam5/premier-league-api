@@ -1,30 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var fixtureRouter = require('./routes/fixtures');
-var teamRouter = require('./routes/teams');
-var userRouter = require('./routes/users');
-var searchRouter = require('./routes/search');
-const logRocket = require('logrocket');
-logRocket.init('pvy6hr/mock-pl-api');
+const indexRouter = require('./routes/index');
+const fixtureRouter = require('./routes/fixtures');
+const teamRouter = require('./routes/teams');
+const userRouter = require('./routes/users');
+const searchRouter = require('./routes/search');
 
-var app = express();
+const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-logRocket.identify('THE_USER_ID_IN_YOUR_APP', {
-  name: 'James Morrison',
-  email: 'jamesmorrison@example.com',
-
-  // Add your own custom user variables here, ie:
-  subscriptionType: 'pro'
-});
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
