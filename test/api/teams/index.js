@@ -3,7 +3,7 @@ const request = require('supertest');
 const Pool = require('pg').Pool
 const app = require('../../../app');
 
-describe('GET /fixtures', () => {
+describe('GET /teams', () => {
     it('Should respond with json', (done) => {
         request(app)
             .get('/fixtures')
@@ -14,7 +14,7 @@ describe('GET /fixtures', () => {
 
 })
 
-describe('POST /fixtures', () => {
+describe('POST /teams', () => {
     it('Should respond with json', (done) => {
         request(app)
             .post('/fixtures')
@@ -25,7 +25,7 @@ describe('POST /fixtures', () => {
 
 })
 
-describe('PUT /fixtures', () => {
+describe('PUT /teams', () => {
     it('Should respond with json', (done) => {
         request(app)
             .put('/fixtures')
@@ -36,7 +36,7 @@ describe('PUT /fixtures', () => {
 
 })
 
-describe('DELETE /fixtures', () => {
+describe('DELETE /teams', () => {
     it('Should respond with json', (done) => {
         request(app)
             .delete('/fixtures')
